@@ -1,17 +1,20 @@
-org 0x7c00
-bits 16
-   xor ax, ax ; make it zero
-   mov ds, ax
- 
-   mov si, msg
-   cld
+%macro BiosPrint 1
+                mov si, word %1
 ch_loop:lodsb
-   or al, al  ; zero=end of string
-   jz hang    ; get out
+   or al, al
+   jz done
    mov ah, 0x0E
-   mov bh, 0
    int 0x10
    jmp ch_loop
+done:
+%endmacro
+ 
+[ORG 0x7c00]
+   xor ax, ax
+   mov ds, ax
+   cld
+ 
+   BiosPrint msg
  
 hang:
    jmp hang
